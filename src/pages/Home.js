@@ -30,38 +30,42 @@ export const Home = () => {
 
   useEffect(() => {
     if (!searchParams.get('id')) {
-      
       if (sessionStorage.getItem("key") === null){
-        getMovieRequest(searchValue);
+        if (searchValue)getMovieRequest(searchValue);
       }
       else {
-        const response = JSON.parse(sessionStorage.getItem("key"));
-        setMovies(response);
+        if (searchValue) getMovieRequest(searchValue);
+        else {
+          const response = JSON.parse(sessionStorage.getItem("key"));
+          setMovies(response);
+        }
       }
     }
     else {
-      setSearchValue(searchParams.get('id'))
-		  getMovieRequest(searchValue);
+      if (searchValue) getMovieRequest(searchValue);
+      else{
+        setSearchValue(searchParams.get('id'))
+      }
     }
 	}, [searchValue]);
 
   useEffect(() => {
-		const movieFavourites = JSON.parse(
-			localStorage.getItem('react-movie-app-favourites')
-		);
-    if (!movieFavourites && Array.isArray(movieFavourites)) {
+		const movieFavourites = JSON.parse(sessionStorage.getItem('react-movie-app-favourites'));
+    if (sessionStorage.getItem("key") === null) console.log("ok");
+    else{
       setFavourites(movieFavourites);
     }
 	}, []);
 
   const saveToLocalStorage = (items) => {
-		localStorage.setItem('react-movie-app-favourites', JSON.stringify(items));
+		sessionStorage.setItem('react-movie-app-favourites', JSON.stringify(items));
 	};
 
 	const addFavouriteMovie = (movie) => {
 		const newFavouriteList = [...favourites, movie];
 		setFavourites(newFavouriteList);
 		saveToLocalStorage(newFavouriteList);
+    console.log(movies)
 	};
 
 	const removeFavouriteMovie = (movie) => {
@@ -69,6 +73,7 @@ export const Home = () => {
 			(favourite) => favourite.imdbID !== movie.imdbID
 		);
     console.log("movie.imdbID",movie.imdbID)
+    console.log(favourites)
 
 		setFavourites(newFavouriteList);
 		saveToLocalStorage(newFavouriteList);

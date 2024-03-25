@@ -24,7 +24,8 @@ export const MovieDetail = () => {
 	};
 
   useEffect(() => {
-		getMovieRequest(searchValue);
+    if (searchValue) getMovieRequest(searchValue);
+		else console.log("no");
 	}, []);
 
   const getMovieDetail = async (idMovie) => {
